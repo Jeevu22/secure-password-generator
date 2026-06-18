@@ -1,5 +1,7 @@
 # Passphrase Generator & Analyzer
 
+🔐 Generate cryptographically secure passwords, analyze their strength, calculate entropy, estimate crack times, and improve account security with actionable recommendations.
+
 Production-grade password strength assessment tool built on security research (NIST SP 800-63B + zxcvbn).
 
 ## Design Philosophy
@@ -195,3 +197,4 @@ gunicorn -w 4 -b 0.0.0.0:5000 analyzer:app
 ```
 
 Nginx as reverse proxy for SSL/TLS.
+

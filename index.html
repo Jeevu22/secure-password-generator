@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passphrase — Secure Password Generator & Analyzer</title>
+    <meta name="description" content="Generate cryptographically secure passwords and passphrases. Analyze strength with entropy calculation and pattern detection.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-icon">🔐</div>
+            <h1 class="app-title">Passphrase</h1>
+            <p class="app-subtitle">Cryptographically secure generation & strength analysis</p>
+        </header>
+
+        <!-- Generator Card -->
+        <section class="card" id="generator">
+            <div class="section-header">
+                <div class="section-icon gen">⚡</div>
+                <span class="section-title">Generate Password</span>
+            </div>
+
+            <!-- Length Control -->
+            <div class="slider-row">
+                <span class="slider-label">Length</span>
+                <div class="slider-track">
+                    <input type="range" id="lengthSlider" min="8" max="64" value="16">
+                </div>
+                <span class="slider-value" id="lengthValue">16</span>
+            </div>
+
+            <!-- Character Types -->
+            <span class="toggle-label">Character Types</span>
+            <div class="toggle-grid">
+                <button class="toggle-btn active" data-type="lowercase">
+                    <span class="dot"></span> Lowercase
+                </button>
+                <button class="toggle-btn active" data-type="uppercase">
+                    <span class="dot"></span> Uppercase
+                </button>
+                <button class="toggle-btn active" data-type="numbers">
+                    <span class="dot"></span> Numbers
+                </button>
+                <button class="toggle-btn active" data-type="symbols">
+                    <span class="dot"></span> Symbols
+                </button>
+                <button class="toggle-btn full-width" id="passphraseToggle" data-type="passphrase">
+                    <span class="dot"></span> Passphrase Mode — Random Words
+                </button>
+            </div>
+
+            <!-- Output -->
+            <div class="output-area">
+                <div class="output-display">
+                    <input type="text" id="passwordOutput" class="password-field" readonly>
+                    <button class="icon-btn" id="copyBtn" title="Copy to clipboard">📋</button>
+                    <button class="icon-btn" id="refreshBtn" title="Regenerate">🔄</button>
+                </div>
+                <button class="generate-btn" id="generateBtn">
+                    <span>⚡</span> Generate Secure Password
+                </button>
+            </div>
+        </section>
+
+        <!-- Analyzer Card -->
+        <section class="card" id="analyzer">
+            <div class="section-header">
+                <div class="section-icon analyze">🔍</div>
+                <span class="section-title">Analyze Strength</span>
+            </div>
+
+            <input type="password" id="analyzerInput" class="analyzer-field" placeholder="Paste or type a password to check its strength...">
+
+            <div id="strengthPanel" style="display:none;">
+                <div class="strength-panel">
+                    <!-- Strength Bar -->
+                    <div class="strength-bar-container">
+                        <div class="bar-seg"></div>
+                        <div class="bar-seg"></div>
+                        <div class="bar-seg"></div>
+                        <div class="bar-seg"></div>
+                        <div class="bar-seg"></div>
+                    </div>
+                    <div class="strength-label" id="strengthLabel">—</div>
+
+                    <!-- Metrics -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="label">Crack Time</div>
+                            <div class="value" id="crackTime">—</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="label">Entropy</div>
+                            <div class="value" id="entropyValue">—</div>
+                        </div>
+                    </div>
+
+                    <!-- Warning -->
+                    <div class="warning-box hidden" id="patternWarning">
+                        <span class="warning-icon">⚠️</span>
+                        <span id="warningText"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Principles Card -->
+        <section class="card" id="principles">
+            <div class="section-header">
+                <div class="section-icon learn">📚</div>
+                <span class="section-title">Security Principles</span>
+            </div>
+
+            <button class="principles-toggle" id="principlesBtn">
+                <span>8 Essential Rules for Strong Passwords</span>
+                <span class="arrow">▼</span>
+            </button>
+
+            <div class="principles-content" id="principlesContent">
+                <div class="principles-list">
+                    <div class="principle-item">
+                        <strong>🔢 Length Beats Complexity</strong>
+                        <p>A 20-char lowercase phrase >> "Tr0ub4dor&3". Every character multiplies the search space exponentially.</p>
+                    </div>
+                    <div class="principle-item">
+                        <strong>🎯 Patterns Over Rules</strong>
+                        <p>Attackers use pattern matching. Dictionary + l33t + year = cracked in seconds. True randomness wins.</p>
+                    </div>
+                    <div class="principle-item">
+                        <strong>🔑 One Per Site</strong>
+                        <p>One breach = every shared account exposed. Use a password manager for unique passwords everywhere.</p>
+                    </div>
+                    <div class="principle-item">
+                        <strong>💬 Passphrases Work</strong>
+                        <p>4 random words (~50+ bits entropy) > 8-char complex password. Easier to remember, harder to crack.</p>
+                    </div>
+                    <div class="principle-item">
+                        <strong>🚫 No Forced Rotation</strong>
+                        <p>Mandatory changes lead to P@ssword1 → P@ssword2. Change only on breach evidence (NIST 800-63B).</p>
+                    </div>
+                    <div class="principle-item">
+                        <strong>🔎 Check Breaches</strong>
+                        <p>A strong password already leaked is useless. Verify against Have I Been Pwned regularly.</p>
+                    </div>
+                    <div class="principle-item">
+                        <strong>🛡️ MFA Everywhere</strong>
+                        <p>One password = one factor. A weak password + MFA >> a strong password alone.</p>
+                    </div>
+                    <div class="principle-item">
+                        <strong>🗄️ Use a Password Manager</strong>
+                        <p>The only way to have strong, unique passwords everywhere. Trust the tool, not your memory.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Press <span class="kbd">Space</span> or <span class="kbd">Enter</span> to generate quickly</p>
+        </footer>
+    </div>
+
+    <script>
+        const CHARS = {
+            lowercase: 'abcdefghijklmnopqrstuvwxyz',
+            uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            numbers: '0123456789',
+            symbols: '!@#$%^&*-_=+[]{}();<>:,.?/'
+        };
+
+        const COMMON_PASSWORDS = new Set(['password','password123','12345678','qwerty','123456','abc123','letmein','monkey','1q2w3e4r','123123','password1','welcome','login','admin','passw0rd','1234567','dragon','123321','mustang','666666','master','batman','123456789','iloveyou','princess','michael','sunshine','ashley']);
+
+        const WORDLIST = ['about','above','absent','absorb','abuse','access','accident','account','accuse','achieve','acid','acoustic','across','act','action','actor','actual','acute','adapt','add','adding','address','adjust','admin','admit','adobe','adopt','adore','adorn','adult','advance','advent','adverb','advise','aerobic','affair','afford','afraid','africa','after','again','age','agent','aging','ago','agonize','agree','agreement','ahead','aim','air','airline','airplane','aisle','ajar','alarm','album','alert','alien','align','alike','alive','all','allay','allege','alley','alliance','allied','allocate','allot','allow','alloy','allure','ally','almanac','almond','almost','alone','along','aloof','aloud','alpha','already','also','altar','alter','always','am','amateur','amaze','amazing','ambiguous','ambition','ambush','amend','amendment','amends','amenity','america','american','amiable','amicable','amid','amidst','amigo','amine','amino','amiss','ammonia','among'];
+
+        const STRENGTH_LABELS = ['Critical','Weak','Fair','Good','Excellent'];
+        const STRENGTH_COLORS = ['str-0','str-1','str-2','str-3','str-4'];
+        const BAR_COLORS = ['bar-0','bar-1','bar-2','bar-3','bar-4'];
+
+        function getRandomValues(n) {
+            const a = new Uint8Array(n);
+            crypto.getRandomValues(a);
+            return a;
+        }
+
+        function shuffleArray(arr) {
+            const c = [...arr];
+            for (let i = c.length - 1; i > 0; i--) {
+                const j = Math.floor((getRandomValues(1)[0] / 256) * (i + 1));
+                [c[i], c[j]] = [c[j], c[i]];
+            }
+            return c;
+        }
+
+        function generatePasswordString(length, types, isPassphrase) {
+            if (isPassphrase) {
+                const count = Math.floor(Math.random() * 3) + 4;
+                const words = [];
+                for (let i = 0; i < count; i++) {
+                    const idx = Math.floor((getRandomValues(1)[0] / 256) * WORDLIST.length);
+                    words.push(WORDLIST[idx]);
+                }
+                return words.join('-');
+            }
+            let chars = '';
+            if (types.lowercase) chars += CHARS.lowercase;
+            if (types.uppercase) chars += CHARS.uppercase;
+            if (types.numbers) chars += CHARS.numbers;
+            if (types.symbols) chars += CHARS.symbols;
+            if (!chars) return '';
+            const pwd = [];
+            if (types.lowercase) pwd.push(CHARS.lowercase[Math.floor((getRandomValues(1)[0]/256)*CHARS.lowercase.length)]);
+            if (types.uppercase) pwd.push(CHARS.uppercase[Math.floor((getRandomValues(1)[0]/256)*CHARS.uppercase.length)]);
+            if (types.numbers) pwd.push(CHARS.numbers[Math.floor((getRandomValues(1)[0]/256)*CHARS.numbers.length)]);
+            if (types.symbols) pwd.push(CHARS.symbols[Math.floor((getRandomValues(1)[0]/256)*CHARS.symbols.length)]);
+            while (pwd.length < length) {
+                pwd.push(chars[Math.floor((getRandomValues(1)[0]/256)*chars.length)]);
+            }
+            return shuffleArray(pwd).join('');
+        }
+
+        function calculateEntropy(password) {
+            let pool = 0;
+            if (/[a-z]/.test(password)) pool += 26;
+            if (/[A-Z]/.test(password)) pool += 26;
+            if (/[0-9]/.test(password)) pool += 10;
+            if (/[^a-zA-Z0-9]/.test(password)) pool += 32;
+            return password.length * Math.log2(pool || 1);
+        }
+
+        function detectPatterns(password) {
+            if (COMMON_PASSWORDS.has(password.toLowerCase())) return 'Common password found in breach databases.';
+            const words = ['password','admin','login','welcome','letmein','master','dragon'];
+            for (const w of words) { if (password.toLowerCase().includes(w)) return `Contains dictionary word "${w}".`; }
+            if (/\d+$/.test(password)) return 'Ends with numbers — a predictable pattern.';
+            const kbp = ['qwerty','asdf','qazwsx','zxcvbnm'];
+            for (const p of kbp) { if (password.toLowerCase().includes(p)) return `Keyboard pattern "${p}" detected.`; }
+            if (/19\d{2}|20\d{2}/.test(password)) return 'Contains a year — easily guessable.';
+            if (/[0@1!35S]/.test(password) && /[a-z]/i.test(password)) return 'L33t speak detected — attackers have dictionaries for this.';
+            if (password.length < 12) return 'Too short — aim for 15+ characters.';
+            if (/(.)\\1{2,}/.test(password)) return 'Repeating characters reduce entropy.';
+            return null;
+        }
+
+        function estimateCrackTime(password) {
+            let guesses = Math.pow(2, calculateEntropy(password));
+            if (COMMON_PASSWORDS.has(password.toLowerCase())) guesses = 1000;
+            const s = guesses / 1e12;
+            if (s < 1) return 'Instant';
+            if (s < 60) return 'Seconds';
+            if (s < 3600) return Math.floor(s/60) + 'm';
+            if (s < 86400) return Math.floor(s/3600) + 'h';
+            if (s < 2592000) return Math.floor(s/86400) + 'd';
+            if (s < 31536000) return Math.floor(s/2592000) + 'mo';
+            const y = Math.floor(s/31536000);
+            return y > 1000000 ? 'Centuries' : y + 'y';
+        }
+
+        function getStrengthScore(password) {
+            const e = calculateEntropy(password);
+            if (e < 20) return 0;
+            if (e < 40) return 1;
+            if (e < 60) return 2;
+            if (e < 80) return 3;
+            return 4;
+        }
+
+        // State
+        let enabledTypes = { lowercase: true, uppercase: true, numbers: true, symbols: true, passphrase: false };
+
+        // Elements
+        const $ = id => document.getElementById(id);
+        const lengthSlider = $('lengthSlider');
+        const lengthValue = $('lengthValue');
+        const passwordOutput = $('passwordOutput');
+        const generateBtn = $('generateBtn');
+        const copyBtn = $('copyBtn');
+        const refreshBtn = $('refreshBtn');
+        const toggleBtns = document.querySelectorAll('.toggle-btn');
+        const analyzerInput = $('analyzerInput');
+        const strengthPanel = $('strengthPanel');
+        const crackTimeEl = $('crackTime');
+        const entropyEl = $('entropyValue');
+        const patternWarning = $('patternWarning');
+        const warningText = $('warningText');
+        const strengthLabel = $('strengthLabel');
+        const barSegments = document.querySelectorAll('.bar-seg');
+        const principlesBtn = $('principlesBtn');
+        const principlesContent = $('principlesContent');
+
+        lengthSlider.addEventListener('input', e => { lengthValue.textContent = e.target.value; });
+
+        toggleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const type = btn.dataset.type;
+                if (type === 'passphrase') {
+                    enabledTypes.passphrase = !enabledTypes.passphrase;
+                    if (enabledTypes.passphrase) {
+                        toggleBtns.forEach(b => { if (b.dataset.type !== 'passphrase') b.classList.remove('active'); });
+                    }
+                } else {
+                    enabledTypes[type] = !enabledTypes[type];
+                }
+                btn.classList.toggle('active');
+                generatePassword();
+            });
+        });
+
+        function generatePassword() {
+            const length = parseInt(lengthSlider.value);
+            const pwd = generatePasswordString(length, enabledTypes, enabledTypes.passphrase);
+            passwordOutput.value = pwd;
+            analyzePassword(pwd);
+        }
+
+        generateBtn.addEventListener('click', generatePassword);
+        refreshBtn.addEventListener('click', generatePassword);
+
+        document.addEventListener('keydown', e => {
+            if ((e.code === 'Space' || e.code === 'Enter') && e.target === document.body) {
+                e.preventDefault();
+                generatePassword();
+            }
+        });
+
+        copyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(passwordOutput.value);
+                copyBtn.classList.add('copied');
+                copyBtn.textContent = '✓';
+                setTimeout(() => { copyBtn.classList.remove('copied'); copyBtn.textContent = '📋'; }, 1200);
+            } catch (err) { console.error('Copy failed:', err); }
+        });
+
+        let analyzerTimeout;
+        analyzerInput.addEventListener('input', e => {
+            clearTimeout(analyzerTimeout);
+            analyzerTimeout = setTimeout(() => analyzePassword(e.target.value), 150);
+        });
+
+        function analyzePassword(password) {
+            if (!password) { strengthPanel.style.display = 'none'; return; }
+            strengthPanel.style.display = 'block';
+            const entropy = calculateEntropy(password);
+            const crackTime = estimateCrackTime(password);
+            const score = getStrengthScore(password);
+            const warning = detectPatterns(password);
+
+            // Update bars
+            barSegments.forEach((seg, i) => {
+                seg.className = 'bar-seg';
+                if (i <= score) seg.classList.add(BAR_COLORS[score]);
+            });
+
+            // Update label
+            strengthLabel.textContent = STRENGTH_LABELS[score];
+            strengthLabel.className = 'strength-label ' + STRENGTH_COLORS[score];
+
+            crackTimeEl.textContent = crackTime;
+            entropyEl.textContent = Math.round(entropy) + ' bits';
+
+            if (warning) {
+                warningText.textContent = warning;
+                patternWarning.classList.remove('hidden');
+            } else {
+                patternWarning.classList.add('hidden');
+            }
+        }
+
+        principlesBtn.addEventListener('click', () => {
+            principlesBtn.classList.toggle('open');
+            principlesContent.classList.toggle('open');
+        });
+
+        // Initial generation
+        generatePassword();
+    </script>
+</body>
+</html>

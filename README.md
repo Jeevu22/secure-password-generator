@@ -1,2 +1,1 @@
-# secure-password-generator
-A cryptographically secure password and passphrase generator with advanced strength analysis, entropy calculation, crack-time estimation, and security recommendations.
+🔐 Generate cryptographically secure passwords, analyze their strength, calculate entropy, estimate crack times, and improve account security with actionable recommendations.
